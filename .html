@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Stylish Store</title>
+
+<style>
+body{
+font-family:Arial;
+margin:0;
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:#333;
+}
+
+/* Navbar */
+.nav{
+background:#222;
+color:white;
+padding:15px;
+text-align:center;
+font-size:22px;
+letter-spacing:1px;
+}
+
+/* Products */
+#products{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+padding:20px;
+justify-content:center;
+}
+
+.product{
+background:white;
+padding:12px;
+width:230px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+transition:0.3s;
+}
+
+.product:hover{
+transform:translateY(-10px) scale(1.05);
+}
+
+.product img{
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:10px;
+}
+
+/* Buttons */
+button{
+background:linear-gradient(45deg,#ff6a00,#ee0979);
+color:white;
+border:none;
+padding:8px;
+border-radius:10px;
+cursor:pointer;
+margin-top:8px;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+}
+
+/* Cart */
+#cart{
+background:white;
+margin:20px;
+padding:15px;
+border-radius:15px;
+box-shadow:0 8px 20px black;
+}
+
+/* Payment */
+#payment{
+background:white;
+margin:20px;
+padding:15px;
+border-radius:15px;
+display:none;
+}
+
+/* Tracker */
+#tracker{
+background:white;
+margin:20px;
+padding:15px;
+border-radius:15px;
+display:none;
+}
+
+.progress{
+width:100%;
+background:#ddd;
+border-radius:10px;
+}
+.bar{
+width:0%;
+height:20px;
+background:linear-gradient(90deg,#00c853,#b2ff59);
+border-radius:10px;
+transition:1s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="nav">🛒 Stylish E-Commerce Store</div>
+
+<div id="products"></div>
+
+<div id="cart">
+<h3>🛍️ Cart</h3>
+<ul id="cartItems"></ul>
+Total: ₹<span id="total">0</span>
+<br><br>
+<button onclick="showPayment()">Proceed to Payment</button>
+</div>
+
+<div id="payment">
+<h3>💳 Payment</h3>
+<select id="method">
+<option>UPI</option>
+<option>Card</option>
+<option>Cash on Delivery</option>
+</select>
+<br><br>
+<button onclick="pay()">Pay Now</button>
+</div>
+
+<div id="tracker">
+<h3>🚚 Order Tracking</h3>
+<p id="status">Order Placed</p>
+<div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+
+<script>
+
+let products=[
+{
+name:"Casual Shirt",
+price:500,
+img:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400"
+},
+{
+name:"Formal Shirt",
+price:700,
+img:"https://images.unsplash.com/photo-1603252109303-2751441dd157?w=400"
+},
+{
+name:"Sneakers",
+price:1200,
+img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"
+},
+{
+name:"Sports Shoes",
+price:1500,
+img:"https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=400"
+},
+{
+name:"Watch",
+price:2000,
+img:"https://images.unsplash.com/photo-1511376777868-611b54f68947?w=400"
+}
+];
+
+let cart=[],total=0;
+
+// Show products
+function show(){
+let box=document.getElementById("products");
+box.innerHTML="";
+
+products.forEach((p,i)=>{
+box.innerHTML+=`
+<div class="product">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+₹${p.price}
+<br>
+<button onclick="add(${i})">Add to Cart</button>
+</div>`;
+});
+}
+
+// Add to cart
+function add(i){
+cart.push(products[i]);
+total+=products[i].price;
+renderCart();
+}
+
+// Render cart
+function renderCart(){
+let list=document.getElementById("cartItems");
+list.innerHTML="";
+cart.forEach(p=>{
+list.innerHTML+=`<li>${p.name} ₹${p.price}</li>`;
+});
+document.getElementById("total").innerText=total;
+}
+
+// Payment
+function showPayment(){
+document.getElementById("payment").style.display="block";
+}
+
+// Pay
+function pay(){
+alert("Payment Successful 💳");
+startTracking();
+}
+
+// Tracking
+function startTracking(){
+document.getElementById("tracker").style.display="block";
+
+let bar=document.getElementById("bar");
+let status=document.getElementById("status");
+
+let steps=["Order Placed","Shipped","Out for Delivery","Delivered"];
+let i=0;
+
+let interval=setInterval(()=>{
+if(i<steps.length){
+status.innerText=steps[i];
+bar.style.width=(i+1)*25+"%";
+i++;
+}else{
+clearInterval(interval);
+}
+},2000);
+}
+
+// Init
+show();
+
+</script>
+
+</body>
+</html>
